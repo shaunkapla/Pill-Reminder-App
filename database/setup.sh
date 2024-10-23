@@ -10,6 +10,6 @@ PRAGMA foreign_keys = ON;
 EOF
 then
     echo "Database created successfully."
-else:
+else
     echo "Database was not created successfully."
 fi
