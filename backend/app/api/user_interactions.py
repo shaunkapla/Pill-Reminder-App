@@ -13,7 +13,11 @@ Endpoints:
 """
 from flask import request, jsonify
 from .helper_functions.verify_user_interactions import verify_user_creation
-from ..services.user_services import create_user_without_phone, create_user_with_phone
+from ..services.user_services import (
+    create_user_without_phone, 
+    create_user_with_phone,
+    get_user_service
+    )
 from ..services.common_errors import UserAlreadyExistsError
 from . import api_bp
 
@@ -41,3 +45,13 @@ def create_user():
     except Exception as e:
         print(f"Error creating user: {e}")
         return jsonify({"error": "Failed to create user."}), 500
+    
+@api_bp.route('/get_user', methods=['GET'])
+def get_user():
+    """
+    
+    """
+    email = request.args.get('email')
+    user = get_user_service(email)
+
+    return user
