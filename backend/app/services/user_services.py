@@ -1,6 +1,10 @@
 from .common_errors import UserAlreadyExistsError, UserDoesntExistError
 from ..dal.read.get_user_methods import get_user_by_email
-from ..dal.create.post_user_methods import create_user_without_phone, create_user_with_phone
+from ..dal.create.post_user_methods import (
+    create_user_without_phone, 
+    create_user_with_phone
+)
+from ..dal.delete.delete_user_methods import delete_user_by_email
 
 def create_user_wo_phone(data):
     user_exists = get_user_by_email(data['email'])
@@ -32,11 +36,13 @@ def get_user_service(email):
         'password': user['pw']
     }
 
-if __name__ == "__main__":
-    info = {
-        "first_name": "Shaun",
-        "last_name": "Kapla",
-        "email": "email@email.com",
-        "pw": "password"
-    }
-    print(create_user_wo_phone(info))
+def delete_user_service(email):
+    message, success = delete_user_by_email(email)
+    
+    if not success and "No user found" in message:
+        raise UserDoesntExistError(message)
+    
+    if not success:
+        raise Exception(message)
+    
+    return message
