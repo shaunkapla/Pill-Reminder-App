@@ -16,9 +16,10 @@ from .helper_functions.verify_user_interactions import verify_user_creation
 from ..services.user_services import (
     create_user_without_phone, 
     create_user_with_phone,
-    get_user_service
+    get_user_service,
+    delete_user_service
     )
-from ..services.common_errors import UserAlreadyExistsError
+from ..services.common_errors import UserAlreadyExistsError, UserDoesntExistError
 from . import api_bp
 
 @api_bp.route('/create_user', methods=["POST"])
@@ -55,3 +56,22 @@ def get_user():
     user = get_user_service(email)
 
     return user
+
+@api_bp.route('/delete_user', methods=['DELETE'])
+def delete_user():
+    """
+    API endpoint to delete a user by email
+    """
+    user_email = request.args.get('email')
+    
+    if not user_email:
+        return 'Error: Argument for user was passed improperly', 400
+    
+    try:
+        deleted_user_message = delete_user_service(user_email)
+        return jsonify({"message": deleted_user_message}), 200
+    except UserDoesntExistError:
+        return jsonify({"error": "User doesn't exist in the database."}), 409
+    except Exception as e:
+        print(f"Error deleting user: {e}")
+        return jsonify({"error": "Failed to delete user."}), 500
