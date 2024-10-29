@@ -14,7 +14,7 @@ from .helper_functions.verify_user_interactions import verify_user_creation
 from ..services.user_services import (
     create_user_without_phone, 
     create_user_with_phone,
-    get_user_service,
+    validate_user_login,
     delete_user_service,
     update_user_service
     )
@@ -46,15 +46,16 @@ def create_user():
         print(f"Error creating user: {e}")
         return jsonify({"error": "Failed to create user."}), 500
     
-@api_bp.route('/get_user', methods=['GET'])
-def get_user():
-    """
+@api_bp.route('/get_and_validate_user', methods=['GET'])
+def get_user_credentials():
+    email = request.json.get('email')
+    print(email)
+    if not email:
+        return jsonify({'message': 'Email is required'}), 400
     
-    """
-    email = request.args.get('email')
-    user = get_user_service(email)
-
-    return user
+    response, status_code = validate_user_login(email, request.json.get('pw'))
+    
+    return jsonify(response), status_code
 
 @api_bp.route('/delete_user', methods=['DELETE'])
 def delete_user():
