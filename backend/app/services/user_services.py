@@ -5,6 +5,7 @@ from ..dal.create.post_user_methods import (
     create_user_with_phone
 )
 from ..dal.delete.delete_user_methods import delete_user_by_email
+from ..dal.update.update_user_methods import update_user_information
 
 def create_user_wo_phone(data):
     user_exists = get_user_by_email(data['email'])
@@ -46,3 +47,7 @@ def delete_user_service(email):
         raise Exception(message)
     
     return message
+
+def update_user_service(email, first_name=None, last_name=None, phone_number=None, password=None):
+    res, status = update_user_information(email, first_name, last_name, phone_number, password)
+    return res, status

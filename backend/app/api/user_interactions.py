@@ -17,7 +17,8 @@ from ..services.user_services import (
     create_user_without_phone, 
     create_user_with_phone,
     get_user_service,
-    delete_user_service
+    delete_user_service,
+    update_user_service
     )
 from ..services.common_errors import UserAlreadyExistsError, UserDoesntExistError
 from . import api_bp
@@ -75,3 +76,16 @@ def delete_user():
     except Exception as e:
         print(f"Error deleting user: {e}")
         return jsonify({"error": "Failed to delete user."}), 500
+    
+@api_bp.route('/update_user', methods=['PATCH'])
+def update_user():
+    data = request.get_json()
+    email = data.get('email')
+    response, status = update_user_service(
+        email,
+        first_name=data.get('first_name'),
+        last_name=data.get('last_name'),
+        phone_number=data.get('phone_number'),
+        password=data.get('pw')
+    )
+    return jsonify(response), status
