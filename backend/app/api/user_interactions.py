@@ -8,8 +8,6 @@ Endpoints:
 3. get_user_login: This endpoint will get the users username and password for validation
 4. delete_user: This endpoint will remove a user from the database
 5. update_user_info: This endpoint will update the users information
-6. update_user_username: This endpoint will update the users username
-7. update_user_password: This endpoint will update the users password
 """
 from flask import request, jsonify
 from .helper_functions.verify_user_interactions import verify_user_creation
